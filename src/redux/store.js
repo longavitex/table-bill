@@ -1,11 +1,17 @@
 // index.js
-import { createStore, combineReducers } from 'redux';
-import dishReducer from './reducers/dish';
+import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
+import { thunk } from 'redux-thunk'
+import logger from 'redux-logger';
+import { persistStore } from 'redux-persist';
+
+import dishReducers from './reducers/dishReducers';
 
 const rootReducer = combineReducers({
-    dish: dishReducer
+    dish: dishReducers
 });
 
-const store = createStore(rootReducer);
+const middlewares = [thunk, logger];
+const store = createStore(rootReducer, compose(applyMiddleware(...middlewares)));
 
+export const persistor = persistStore(store);
 export default store;

@@ -6,7 +6,7 @@ const Tables = () => {
     const [selectedTable, setSelectedTable] = useState(null);
     const [openPopup, setOpenPopup] = useState(false);
 
-    const handleAddToOrder = (tableId) => {
+    const handleTable = (tableId) => {
         setSelectedTable(tableId);
         setOpenPopup(true);
     };
@@ -28,7 +28,7 @@ const Tables = () => {
                             <td>{item.id}</td>
                             <td>{item.name}</td>
                             <td>
-                                <button onClick={() => handleAddToOrder(item.id)}>
+                                <button onClick={() => handleTable(item.id)}>
                                     Chi tiết
                                 </button>
                             </td>
