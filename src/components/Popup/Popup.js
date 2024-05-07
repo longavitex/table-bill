@@ -1,36 +1,18 @@
-// Popup.js
-import React, { useState } from "react";
-import dishData from "../../data/dish.json";
+import React, { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { addDishToTable } from "../../redux/actions/dish";
+import dataDish from "../../data/dish.json"
 
 const Popup = ({ tableId, setOpenPopup }) => {
-    const [selectedDishes, setSelectedDishes] = useState([]);
+    const dispatch = useDispatch();
+    const initialDishes = useSelector((state) => state.dish.tables.find((table) => table.id === tableId)?.dishes) || dataDish;
+    const [selectedDishes, setSelectedDishes] = useState(initialDishes);
 
-    const handleQuantityChange = (dishId, quantity) => {
-        const updatedDishes = selectedDishes.map((dish) => {
-            if (dish.id === dishId) {
-                return { ...dish, quantity };
-            }
-            return dish;
-        });
-        setSelectedDishes(updatedDishes);
+    const handleAddToOrder = (dishId, quantity) => {
+        dispatch(addDishToTable(tableId, dishId, quantity));
+        console.log(selectedDishes);
     };
 
-    const handleAddToOrder = (dishId) => {
-        const dishToAdd = dishData.find((dish) => dish.id === dishId);
-        if (dishToAdd) {
-            setSelectedDishes([...selectedDishes, { ...dishToAdd, quantity: 1 }]);
-        }
-    };
-
-    const handleRemoveFromOrder = (dishId) => {
-        const updatedDishes = selectedDishes.filter((dish) => dish.id !== dishId);
-        setSelectedDishes(updatedDishes);
-    };
-
-    const handleConfirmOrder = () => {
-        // Logic to save selected dishes for the tableId
-        setOpenPopup(false);
-    };
 
     return (
         <div className="popup">
@@ -49,31 +31,35 @@ const Popup = ({ tableId, setOpenPopup }) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {dishData.map((item) => (
+                    {selectedDishes.map((item) => (
                         <tr key={item.id}>
                             <td>{item.id}</td>
                             <td>{item.name}</td>
                             <td>{item.price}.000đ</td>
                             <td>
                                 <div className="quantity-block">
-                                    <button className="decrease" onClick={() => handleQuantityChange(item.id, item.quantity - 1)}>
+                                    <button
+                                        className="decrease"
+                                        onClick={() => handleAddToOrder(item.id, item.quantity >= 1 ? item.quantity - 1 : 0)}
+                                    >
                                         -
                                     </button>
                                     <span className="quantity" style={{ margin: "0 12px" }}>
                                         {item.quantity}
                                     </span>
-                                    <button className="increase" onClick={() => handleQuantityChange(item.id, Number(item.quantity + 1))}>
+                                    <button
+                                        className="increase"
+                                        onClick={() => handleAddToOrder(item.id, item.quantity + 1)}
+                                    >
                                         +
                                     </button>
                                 </div>
                             </td>
                             <td>{item.price * item.quantity}.000đ</td>
-                            <td>{selectedDishes.some((dish) => dish.id === item.id) ? <button onClick={() => handleRemoveFromOrder(item.id)}>Xóa</button> : <button onClick={() => handleAddToOrder(item.id)}>Thêm</button>}</td>
                         </tr>
                     ))}
                 </tbody>
             </table>
-            <button onClick={handleConfirmOrder}>Xác nhận</button>
         </div>
     );
 };

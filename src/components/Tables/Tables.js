@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import Popup from "../Popup/Popup";
-import tableData from "../../data/table.json"
+import tableData from "../../data/table.json";
 
 const Tables = () => {
     const [selectedTable, setSelectedTable] = useState(null);
     const [openPopup, setOpenPopup] = useState(false);
 
-    const handlePayment = (tableId) => {
+    const handleAddToOrder = (tableId) => {
         setSelectedTable(tableId);
         setOpenPopup(true);
     };
@@ -23,19 +23,20 @@ const Tables = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {tableData.map(item => (
+                    {tableData.map((item) => (
                         <tr key={item.id}>
                             <td>{item.id}</td>
                             <td>{item.name}</td>
                             <td>
-                                <button onClick={() => handlePayment(item.id)}>Thêm món</button>
-                                <button style={{ marginLeft: "12px" }}>Thanh toán</button>
+                                <button onClick={() => handleAddToOrder(item.id)}>
+                                    Chi tiết
+                                </button>
                             </td>
                         </tr>
                     ))}
                 </tbody>
             </table>
-            {openPopup ? (<Popup tableId={selectedTable} setOpenPopup={setOpenPopup} />) : (<></>)}
+            {openPopup ? <Popup tableId={selectedTable} setOpenPopup={setOpenPopup} /> : <></>}
         </div>
     );
 };
