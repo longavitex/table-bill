@@ -42,8 +42,8 @@ const Dish = ({ tableId, setOpenDish }) => {
         setTotalValue(total);
     };
 
-    // console.log("allOrders: ", allOrders);
-    // console.log('current order: ', orders);
+    console.log("allOrders: ", allOrders);
+    console.log('current order: ', orders);
 
 
     const handleCheckout = () => {
