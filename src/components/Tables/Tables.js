@@ -1,14 +1,14 @@
 import React, { useState } from "react";
-import Popup from "../Popup/Popup";
+import Dish from "../Dish/Dish";
 import tableData from "../../data/table.json";
 
 const Tables = () => {
     const [selectedTable, setSelectedTable] = useState(null);
-    const [openPopup, setOpenPopup] = useState(false);
+    const [openDish, setOpenDish] = useState(false);
 
     const handleTable = (tableId) => {
         setSelectedTable(tableId);
-        setOpenPopup(true);
+        setOpenDish(true);
     };
 
     return (
@@ -36,7 +36,7 @@ const Tables = () => {
                     ))}
                 </tbody>
             </table>
-            {openPopup ? <Popup tableId={selectedTable} setOpenPopup={setOpenPopup} /> : <></>}
+            {openDish ? <Dish tableId={selectedTable} setOpenDish={setOpenDish} /> : <></>}
         </div>
     );
 };
