@@ -1,0 +1,44 @@
+[
+    {
+        "id": 1,
+        "name": "Sushi",
+        "price": 50,
+        "quantity": 0
+    },
+    {
+        "id": 2,
+        "name": "Sashimi",
+        "price": 40,
+        "quantity": 0
+    },
+    {
+        "id": 3,
+        "name": "Rượu Sake",
+        "price": 60,
+        "quantity": 0
+    },
+    {
+        "id": 4,
+        "name": "Mỳ Udon",
+        "price": 60,
+        "quantity": 0
+    },
+    {
+        "id": 5,
+        "name": "Ca hoi",
+        "price": 40,
+        "quantity": 0
+    },
+    {
+        "id": 6,
+        "name": "Banh my",
+        "price": 30,
+        "quantity": 0
+    },
+    {
+        "id": 7,
+        "name": "Dau luoc",
+        "price": 30,
+        "quantity": 0
+    }
+]
