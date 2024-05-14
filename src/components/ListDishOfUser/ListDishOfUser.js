@@ -1,24 +1,23 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import dataDrink from "../../data/drink.json";
-import dataUser from "../../data/user.json";
-import { addDishToOrder, updateDishQuantity, clearOrders } from "../../redux/actions/dishActions";
+import { addDishToOrder, updateDishQuantity, clearOrders } from "../../redux/actions/userActions";
 import Payment from "../Payment/Payment";
 
 const ListDishOfUser = ({ tableId, userId, setOpenDishOfUser }) => {
     const dispatch = useDispatch();
-    const orders = useSelector((state) => state.dish.orders[tableId] || []);
+    const orders = useSelector((state) => state.dish.orders[userId] || []);
     const allOrders = Object.values(useSelector((state) => state).dish.orders);
     const [totalValue, setTotalValue] = useState(0);
     const [showPayment, setShowPayment] = useState(false);
 
-    const handleIncreaseQuantity = (dishId, quantity) => {
+    const handleIncreaseQuantity = (userId, tableId, dishId, quantity) => {
         // Nếu món ăn đã có trong đơn hàng, tăng số lượng lên
-        if (orders.some((dish) => dish.dishId === dishId)) {
-            dispatch(updateDishQuantity(tableId, dishId, quantity + 1));
+        if (orders.some((item) => item.userId === userId && item.tableId === tableId && item.dishId === dishId)) {
+            dispatch(updateDishQuantity(userId, tableId, dishId, quantity + 1));
         } else {
             // Nếu món ăn chưa có trong đơn hàng, thêm món ăn vào đơn hàng với số lượng là 1
-            dispatch(addDishToOrder(tableId, dishId, 1));
+            dispatch(addDishToOrder(userId, tableId, dishId, 1));
         }
         calculateTotal();
     };
@@ -26,22 +25,22 @@ const ListDishOfUser = ({ tableId, userId, setOpenDishOfUser }) => {
     const handleDecreaseQuantity = (dishId, quantity) => {
         if (quantity > 0) {
             // Dispatch action để cập nhật số lượng món ăn
-            dispatch(updateDishQuantity(tableId, dishId, quantity - 1));
+            dispatch(updateDishQuantity(userId, tableId, dishId, quantity - 1));
         }
         calculateTotal();
     };
 
-    useEffect(() => {
-        calculateTotal();
-    }, [orders]); // Gọi calculateTotal mỗi khi orders thay đổi
-
-    const calculateTotal = () => {
+    const calculateTotal = useCallback(() => {
         const total = orders.reduce((total, order) => {
             const dish = dataDrink.find((item) => item.id === order.dishId);
             return total + (dish ? dish.price * order.quantity : 0);
         }, 0);
         setTotalValue(total);
-    };
+    }, [orders]);
+
+    useEffect(() => {
+        calculateTotal();
+    }, [orders, calculateTotal]);
 
     console.log("allOrders: ", allOrders);
     console.log('current order: ', orders);
@@ -85,13 +84,13 @@ const ListDishOfUser = ({ tableId, userId, setOpenDishOfUser }) => {
                             <td>{item.price}.000đ</td>
                             <td>
                                 <div className="quantity-block">
-                                    <button className="decrease" onClick={() => handleDecreaseQuantity(item.id, orders.find((dish) => dish.dishId === item.id)?.quantity || 1)}>
+                                    <button className="decrease" onClick={() => handleDecreaseQuantity(item.id, orders.some(order => order.userId === userId && order.tableId === tableId) ? orders.find((order) => order.dishId === item.id)?.quantity : 1)}>
                                         -
                                     </button>
                                     <span className="quantity" style={{ margin: "0 12px" }}>
-                                        {orders.find((dish) => dish.dishId === item.id)?.quantity || 0}
+                                        {orders.some(order => order.userId === userId && order.tableId === tableId && order.dishId === item.id) ? orders.find((order) => order.dishId === item.id)?.quantity : 0}
                                     </span>
-                                    <button className="increase" onClick={() => handleIncreaseQuantity(item.id, orders.find((dish) => dish.dishId === item.id)?.quantity || 1)}>
+                                    <button className="increase" onClick={() => handleIncreaseQuantity(userId, tableId, item.id, orders.some(order => order.userId === userId && order.tableId === tableId) ? orders.find((order) => order.dishId === item.id)?.quantity : 1)}>
                                         +
                                     </button>
                                 </div>
@@ -108,14 +107,14 @@ const ListDishOfUser = ({ tableId, userId, setOpenDishOfUser }) => {
                 </tbody>
             </table>
 
-            {showPayment && (
+            {/* {showPayment && (
                 <Payment
                     tableId={tableId}
                     orders={orders}
                     totalValue={totalValue}
                     onClose={handleClosePayment}
                 />
-            )}
+            )} */}
         </div>
     )
 }
