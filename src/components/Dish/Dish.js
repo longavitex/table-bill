@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import dataDish from "../../data/dish.json";
-import dataUser from "../../data/user.json";
 import { addDishToOrder, updateDishQuantity, clearOrders } from "../../redux/actions/dishActions";
 import Payment from "../Payment/Payment";
-import ListDishOfUser from "../ListDishOfUser/ListDishOfUser";
 
 const Dish = ({ tableId, setOpenDish }) => {
     const dispatch = useDispatch();
@@ -12,14 +10,6 @@ const Dish = ({ tableId, setOpenDish }) => {
     const allOrders = Object.values(useSelector((state) => state).dish.orders);
     const [totalValue, setTotalValue] = useState(0);
     const [showPayment, setShowPayment] = useState(false);
-
-    const [selectedUser, setSelectedUser] = useState(null);
-    const [openDishOfUser, setOpenDishOfUser] = useState(false);
-
-    const handleUser = (userId) => {
-        setSelectedUser(userId);
-        setOpenDishOfUser(true);
-    };
 
     const handleIncreaseQuantity = (dishId, quantity) => {
         // Nếu món ăn đã có trong đơn hàng, tăng số lượng lên
@@ -117,32 +107,6 @@ const Dish = ({ tableId, setOpenDish }) => {
                 </tbody>
             </table>
             <button onClick={handleCheckout}>Thanh toán</button>
-
-            <h2 style={{ color: "white" }}>Danh sách phục vụ</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Tên phục vụ</th>
-                        <th>Thao tác</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {dataUser.map((item) => (
-                        <tr key={item.id}>
-                            <td>{item.id}</td>
-                            <td>{item.name}</td>
-                            <td>
-                                <button onClick={() => handleUser(item.id)}>
-                                    Chi tiết
-                                </button>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-
-            {openDishOfUser ? <ListDishOfUser tableId={tableId} userId={selectedUser} setOpenDishOfUser={setOpenDishOfUser} /> : <></>}
 
             {showPayment && (
                 <Payment

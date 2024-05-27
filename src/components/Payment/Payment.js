@@ -1,10 +1,11 @@
 import React from "react";
 import dishData from "../../data/dish.json";
+import tableData from "../../data/table.json";
 
 const Payment = ({ tableId, orders, totalValue, onClose }) => {
     return (
         <div className="popup payment">
-            <h2 style={{ color: "white" }}>Thanh toán cho bàn {tableId}</h2>
+            <h2 style={{ color: "white" }}>Thanh toán cho {tableData.find((table) => table.id === tableId)?.name}</h2>
             <table>
                 <thead>
                     <tr>

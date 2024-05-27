@@ -5,9 +5,11 @@ import logger from 'redux-logger';
 import { persistStore } from 'redux-persist';
 
 import dishReducers from './reducers/dishReducers';
+import dishOfUserReducers from './reducers/dishOfUserReducers';
 
 const rootReducer = combineReducers({
-    dish: dishReducers
+    dish: dishReducers,
+    dishOfUser: dishOfUserReducers,
 });
 
 const middlewares = [thunk, logger];

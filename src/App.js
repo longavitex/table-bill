@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, NavLink } from "react-router-dom";
 import Tables from "./components/Tables/Tables";
 import { Provider } from 'react-redux';
 import store from "./redux/store";
+import Users from "./components/Users/Users";
 
 function App() {
   return (
@@ -17,6 +18,12 @@ function App() {
           </NavLink>
           <Routes>
             <Route path="/tables" element={<Tables />} />
+          </Routes>
+          <NavLink to={'/users'}>
+            <h3>Users</h3>
+          </NavLink>
+          <Routes>
+            <Route path="/users" element={<Users />} />
           </Routes>
         </BrowserRouter>
       </div>
